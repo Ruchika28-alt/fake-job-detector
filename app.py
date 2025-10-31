@@ -3,6 +3,9 @@ import streamlit as st
 import joblib
 import pandas as pd
 
+# -------------------------------
+# Load trained models
+# -------------------------------
 @st.cache_resource
 def load_models():
     model_lr = joblib.load("models/pipe_logreg_tfidf.joblib")
@@ -10,61 +13,108 @@ def load_models():
     return model_lr, model_rf
 
 model_lr, model_rf = load_models()
+
+# -------------------------------
+# Streamlit app configuration
+# -------------------------------
 st.set_page_config(page_title="Fake Job Posting Detector", layout="centered")
+st.title("🕵️‍♀️ Fake Job Posting Detector")
+st.write(
+    "Detect whether a job posting is **real or fake** using machine learning models."
+)
+st.caption("Models used: Logistic Regression and Random Forest")
 
-st.title("Fake Job Posting Detector")
-st.write("Upload a CSV or paste a job posting to get predictions. Models: Logistic Regression, Random Forest")
-
-mode = st.radio("Mode", ["Single prediction", "Batch (CSV upload)"])
-
+# -------------------------------
+# Choose mode
+# -------------------------------
+mode = st.radio("Select mode:", ["Single Prediction", "Batch (CSV Upload)"])
 label_map = {0: "Real", 1: "Fake"}
 
-if mode == "Single prediction":
-    st.subheader("Paste job posting text ")
-    text = st.text_area("Job text", height=250)
-    model_choice = st.selectbox("Model", ("Logistic Regression", "Random Forest"))
-    if st.button("Predict"):
+# -------------------------------
+# Single prediction section
+# -------------------------------
+if mode == "Single Prediction":
+    st.subheader("🔹 Single Job Prediction")
+
+    sample_placeholder = (
+        "Example:\n"
+        "Title: Data Analyst\n"
+        "Company Profile: We are a data analytics startup helping clients make data-driven decisions.\n"
+        "Description: Seeking a skilled data analyst to gather, clean, and interpret data.\n"
+        "Requirements: Knowledge of Python, SQL, Power BI.\n"
+        "Benefits: Work from home, health insurance, flexible schedule."
+    )
+
+    text = st.text_area(
+        "Enter job posting details below:",
+        height=250,
+        placeholder=sample_placeholder
+    )
+
+    model_choice = st.selectbox("Select Model", ("Logistic Regression", "Random Forest"))
+
+    if st.button("🔍 Predict"):
         if not text.strip():
-            st.warning("Please provide job posting text.")
+            st.warning("Please enter job posting text.")
         else:
             model = model_lr if model_choice == "Logistic Regression" else model_rf
             pred = model.predict([text])[0]
             proba = None
             try:
                 proba = model.predict_proba([text])[0][1]
-            except:
+            except Exception:
                 pass
-            st.success(f"Prediction: **{label_map[int(pred)]}**  (label id: {int(pred)})")
-            if proba is not None:
-                st.write(f"Probability (fake): {proba:.3f}")
 
+            st.success(f"Prediction: **{label_map[int(pred)]}** (Label ID: {int(pred)})")
+            if proba is not None:
+                st.write(f"Probability (Fake): `{proba:.3f}`")
+
+# -------------------------------
+# Batch prediction section
+# -------------------------------
 else:
-    st.subheader("Upload CSV (must contain columns: title, company_profile, description, requirements, benefits) or at least 'text' column")
-    uploaded = st.file_uploader("Upload CSV", type=["csv"])
-    model_choice = st.selectbox("Model (batch)", ("Logistic Regression", "Random Forest"), key="batch_model")
+    st.subheader("📂 Batch Prediction (CSV Upload)")
+    st.write("Upload a CSV file with columns like: `title`, `company_profile`, `description`, `requirements`, `benefits`.")
+
+    uploaded = st.file_uploader("Upload CSV File", type=["csv"])
+    model_choice = st.selectbox("Select Model (Batch)", ("Logistic Regression", "Random Forest"), key="batch_model")
+
     if uploaded is not None:
         df = pd.read_csv(uploaded)
-        # If text column not present, try to combine known columns
+
+        # Combine text columns if needed
         if 'text' not in df.columns:
             df['text'] = (
-                df.get('title', '').fillna('') + " . " +
-                df.get('company_profile', '').fillna('') + " . " +
-                df.get('description', '').fillna('') + " . " +
-                df.get('requirements', '').fillna('') + " . " +
+                df.get('title', '').fillna('') + ". " +
+                df.get('company_profile', '').fillna('') + ". " +
+                df.get('description', '').fillna('') + ". " +
+                df.get('requirements', '').fillna('') + ". " +
                 df.get('benefits', '').fillna('')
             )
+
         model = model_lr if model_choice == "Logistic Regression" else model_rf
+
+        # Make predictions
         preds = model.predict(df['text'].astype(str).tolist())
-        probs = None
+
         try:
-            probs = model.predict_proba(df['text'].astype(str).tolist())[:,1]
-        except:
-            probs = [None]*len(preds)
+            probs = model.predict_proba(df['text'].astype(str).tolist())[:, 1]
+        except Exception:
+            probs = [None] * len(preds)
+
         df['predicted_fraudulent'] = preds
-        df['predicted_label'] = df['predicted_fraudulent'].map({0:'Real',1:'Fake'})
+        df['predicted_label'] = df['predicted_fraudulent'].map(label_map)
         df['prob_fake'] = probs
-        st.write("Prediction results (first 20 rows):")
+
+        st.write("### 🧾 Prediction Results (First 20 Rows)")
         st.dataframe(df.head(20))
+
         csv = df.to_csv(index=False).encode('utf-8')
-        st.download_button("Download predictions CSV", data=csv, file_name="predictions.csv", mime="text/csv")
+        st.download_button(
+            "⬇️ Download Predictions as CSV",
+            data=csv,
+            file_name="predictions.csv",
+            mime="text/csv"
+        )
+
 
