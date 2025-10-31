@@ -37,12 +37,7 @@ if mode == "Single Prediction":
     st.subheader("🔹 Single Job Prediction")
 
     sample_placeholder = (
-        "Example:\n"
-        "Title: Data Analyst\n"
-        "Company Profile: We are a data analytics startup helping clients make data-driven decisions.\n"
-        "Description: Seeking a skilled data analyst to gather, clean, and interpret data.\n"
-        "Requirements: Knowledge of Python, SQL, Power BI.\n"
-        "Benefits: Work from home, health insurance, flexible schedule."
+        "Eg : Work from home and earn $10,000 per week! No experience required. Click here to apply now!"
     )
 
     text = st.text_area(
@@ -116,5 +111,6 @@ else:
             file_name="predictions.csv",
             mime="text/csv"
         )
+
 
 
