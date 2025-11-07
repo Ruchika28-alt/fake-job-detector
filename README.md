@@ -25,11 +25,23 @@ Additionally, a **synthetic labeled dataset (1,000 samples)** was created to eva
 | Features | `title`, `company_profile`, `description`, `requirements`, `benefits` |
 | Target variable | `fraudulent` → 0 = Real, 1 = Fake |
 
-### Preprocessing Steps
-1. Removed missing and duplicate text entries  
-2. Combined multiple textual columns into a single feature (`text`)  
-3. Converted text to lowercase and removed punctuation  
-4. Transformed text into numeric vectors using **TF-IDF Vectorization**
+## ⚙️ Data Preprocessing
+
+Before feeding the text data into machine learning models, several preprocessing steps were applied to ensure data quality and consistency:
+
+### 1. Data Cleaning
+- Removed missing entries and duplicates.  
+- Dropped irrelevant columns to focus on textual features.
+
+### 2. Text Consolidation
+- Combined multiple text columns (`title`, `description`, `requirements`, etc.) into a single `text` feature to capture the full context of the job posting.
+
+### 3. Text Normalization
+- Converted all text to lowercase.  
+- Removed punctuation, special characters, and excessive whitespace.
+
+### 4. Vectorization
+- Transformed textual data into numerical representations using **TF-IDF Vectorization**, which reflects the importance of words in the context of all documents.
 
 ---
 
@@ -55,10 +67,40 @@ Raw Data → Cleaning → TF-IDF Vectorization → ML Model (LR / RF) → Evalua
 Alternative algorithms such as SVMs or XGBoost were considered but not included to keep the focus on interpretability and efficiency.
 
 ---
+## 📊 Model Evaluation
 
-## ▶️ Steps to Run the Project
+Models are evaluated using standard metrics:  
 
-### 1. Clone the Repository
+- **Accuracy:** Overall correctness.  
+- **Precision:** Fraction of predicted fakes that are actually fake.  
+- **Recall:** Fraction of actual fakes correctly identified.  
+- **F1-Score:** Harmonic mean of precision and recall.  
+- **Confusion Matrix:** Visual summary of true/false positives and negatives.  
+
+Visualizations are done using **Matplotlib** and **Seaborn** to analyze model performance.
+
+---
+## 🚀 Deployment
+
+The trained models are deployed via **Streamlit**, allowing real-time predictions.  
+
+**Features:**
+- Paste or upload job descriptions.
+- Get instant predictions: **Real** or **Fake**.
+- Highlight suspicious keywords (Logistic Regression).
+
+### How to Run Locally
+
+1. Clone the repository
 ```bash
 git clone https://github.com/yourusername/fake-job-detector.git
-cd fake-job-detector 
+cd fake-job-detector
+```
+2. Install dependencies
+```bash
+   pip install -r requirements.txt
+   ```
+3. Run the Streamlit app
+```bash
+streamlit run app.py
+```  
