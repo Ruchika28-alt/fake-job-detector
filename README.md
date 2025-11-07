@@ -9,7 +9,8 @@ The project compares two models — **Logistic Regression** and **Random Forest*
 
 The final solution is deployed using **Streamlit**, allowing users to paste or upload job descriptions and instantly check whether they appear *real* or *fake*.
  
-🔗 Live Demo: Fake Job Posting Detector
+🔗 Live Demo: Fake Job Posting Detector : https://fake-job-detector-ncnyxwvhhuospq9sjkbvrp.streamlit.app
+
 ---
 
 ## 📂 Dataset Source
