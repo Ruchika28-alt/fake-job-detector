@@ -5,9 +5,6 @@ The rise of online job portals has brought convenience to job seekers, but it ha
 
 This project focuses on building an automated system that can detect fraudulent job advertisements using Natural Language Processing (NLP) and Machine Learning (ML). By analyzing textual features of job postings, the system aims to classify them as either real or fake, thereby helping users identify potentially suspicious listings before engaging with them.
 
-
-🔗 Live Demo: Fake Job Posting Detector
-
 The project compares two models — **Logistic Regression** and **Random Forest** — to determine which performs better in identifying suspicious job postings.  
 
 The final solution is deployed using **Streamlit**, allowing users to paste or upload job descriptions and instantly check whether they appear *real* or *fake*.
