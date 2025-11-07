@@ -103,4 +103,72 @@ cd fake-job-detector
 3. Run the Streamlit app
 ```bash
 streamlit run app.py
-```  
+```
+## 📈 Experiments & Results
+
+We evaluated the performance of **Logistic Regression** and **Random Forest** models on the test dataset using standard classification metrics: Accuracy, Precision, Recall, and F1 Score.  
+
+| Model                | Accuracy | Precision | Recall    | F1 Score  |
+|----------------------|----------|-----------|-----------|-----------|
+| Logistic Regression  | 0.931    | 1.0       | 0.802857  | 0.890650  |
+| Random Forest        | 0.729    | 1.0       | 0.225714  | 0.368298  |
+
+
+### 🔹 Confusion Matrices
+
+**Logistic Regression Confusion Matrix**  
+![Logistic Regression Confusion Matrix](images/logistic_confusion_matrix.png)  
+
+**Random Forest Confusion Matrix**  
+![Random Forest Confusion Matrix](images/random_forest_confusion_matrix.png)  
+
+---
+
+### 🔹 ROC Curve Comparison
+
+The ROC curve shows the trade-off between True Positive Rate and False Positive Rate for both models. Logistic Regression has a better area under the curve (AUC), indicating superior overall performance.  
+
+![ROC Curve Comparison](images/roc_curve_comparison.png)  
+
+---
+
+### 🔹 Overall Performance Visualization
+
+To summarize model performance across metrics:
+
+![Model Performance Comparison](images/model_performance_comparison.png)  
+
+
+### 🔹 Observations
+- **Logistic Regression** outperformed Random Forest in overall metrics, especially in Recall and F1 Score.  
+- **Random Forest** had perfect precision but very low recall, indicating it rarely misclassifies fake jobs as real, but misses many actual fakes.  
+- Logistic Regression is more suitable for **imbalanced text classification** tasks like this one.  
+
+## 🏁 Conclusion
+
+This project demonstrates the effectiveness of **Natural Language Processing** and **Machine Learning** in detecting fraudulent job postings. Key takeaways include:
+
+- **Logistic Regression** outperforms Random Forest on this dataset, achieving a strong balance between **Precision** and **Recall**, making it reliable for real-world detection.  
+- **Random Forest** has perfect Precision but very low Recall, which may miss many fake postings, highlighting the importance of model selection based on use-case priorities.  
+- **TF-IDF vectorization** is highly effective for text-based classification tasks, providing a computationally efficient way to represent textual features.  
+- Deploying the model via **Streamlit** allows non-technical users to easily detect suspicious job postings in real time.  
+- Future work could explore **deep learning approaches** (e.g., LSTM, BERT) or additional metadata (company ratings, links, posting source) to further improve detection accuracy.
+
+Overall, this project shows that **machine learning models can significantly aid in identifying fraudulent job postings**, providing a practical tool for job seekers and platforms alike.
+
+---
+
+## 📚 References
+
+1. Employed Scam Aegean Dataset (EMSCAD) – [Kaggle Dataset](https://www.kaggle.com/datasets/shivamb/real-or-fake-fake-job-postings)  
+2. Scikit-learn documentation – [https://scikit-learn.org/stable/](https://scikit-learn.org/stable/)  
+3. Streamlit documentation – [https://docs.streamlit.io/](https://docs.streamlit.io/)  
+
+---
+## Author
+
+**Ruchika Kale** – B.Tech 2022-26 
+GitHub: [Ruchika28-alt](https://github.com/Ruchika28-alt)  
+Email: ruchikakale275@gmail.com
+
+
